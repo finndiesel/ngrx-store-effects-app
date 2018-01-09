@@ -2,69 +2,16 @@ import { PizzasAction, LOAD_PIZZAS, LOAD_PIZZAS_FAIL, LOAD_PIZZAS_SUCCESS } from
 import { Pizza } from '../../models/pizza.model';
 
 export interface PizzaState {
-  data: Pizza[],
-  loaded: boolean,
-  loading: boolean,
+  entities: { [id: number]: Pizza};
+  loaded: boolean;
+  loading: boolean;
 }
 
 export const initState: PizzaState = {
-  data: [{
-    "name": "Everything!",
-    "toppings": [
-      {
-        "id": 6,
-        "name": "mushroom"
-      },
-      {
-        "id": 7,
-        "name": "olive"
-      },
-      {
-        "id": 2,
-        "name": "bacon"
-      },
-      {
-        "id": 3,
-        "name": "basil"
-      },
-      {
-        "id": 1,
-        "name": "anchovy"
-      },
-      {
-        "id": 8,
-        "name": "onion"
-      },
-      {
-        "id": 11,
-        "name": "sweetcorn"
-      },
-      {
-        "id": 9,
-        "name": "pepper"
-      },
-      {
-        "id": 5,
-        "name": "mozzarella"
-      },
-      {
-        "id": 10,
-        "name": "pepperoni"
-      },
-      {
-        "id": 12,
-        "name": "tomato"
-      },
-      {
-        "id": 4,
-        "name": "chili"
-      }
-    ],
-    "id": 2
-  },],
+  entities: {},
   loaded: false,
   loading: false,
-}
+};
 
 export function reducer(
   state = initState,
@@ -75,7 +22,7 @@ export function reducer(
       return {
         ...state,
         loading: true,
-      }
+      };
     }
 
     case LOAD_PIZZAS_FAIL: {
@@ -83,20 +30,35 @@ export function reducer(
         ...state,
         loading: false,
         loaded: false
-      }
+      };
     }
 
     case LOAD_PIZZAS_SUCCESS: {
+      const pizzas = action.payload;
+      const entities = pizzas.reduce(
+        (entities: { [id: number]: Pizza}, pizza: Pizza) => {
+          return {
+            ...entities,
+            [pizza.id]: pizza,
+          };
+        },
+        {
+          ...state.entities
+        }
+      )
+
+
       return {
         ...state,
         loading: false,
-        loaded: true
-      }
+        loaded: true,
+        entities
+      };
     }
   }
   return state;
 }
 
-export const getPizzas = (state: PizzaState) => state.data;
+export const getPizzasEntities = (state: PizzaState) => state.entities;
 export const getPizzasLoading = (state: PizzaState) => state.loading;
 export const getPizzasLoaded = (state: PizzaState) => state.loaded;
