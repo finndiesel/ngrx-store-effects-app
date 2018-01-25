@@ -7,13 +7,13 @@ export interface PizzaState {
   loading: boolean;
 }
 
-export const initState: PizzaState = {
+const initState: PizzaState = {
   entities: {},
   loaded: false,
   loading: false,
 };
 
-export function reducer(
+export function pizzaReducer(
   state = initState,
   action: PizzasAction,
 ): PizzaState {
@@ -36,9 +36,9 @@ export function reducer(
     case LOAD_PIZZAS_SUCCESS: {
       const pizzas = action.payload;
       const entities = pizzas.reduce(
-        (entities: { [id: number]: Pizza}, pizza: Pizza) => {
+        (pizzas: { [id: number]: Pizza}, pizza: Pizza) => {
           return {
-            ...entities,
+            ...pizzas,
             [pizza.id]: pizza,
           };
         },

@@ -6,7 +6,9 @@ import { Observable } from 'rxjs/Observable';
 import { Pizza } from '../../models/pizza.model';
 import { Topping } from '../../models/topping.model';
 import { ProductsState } from '../../store/reducers';
-import { getSelectedPizza } from '../../store/selectors';
+import { getPizzaVisualised, getSelectedPizza } from '../../store/selectors';
+import { LoadToppings, VisualizeToppings } from '../../store/actions';
+import { getAllToppings } from '../../store/selectors/toppings.selectors';
 
 @Component({
   selector: 'product-item',
@@ -16,13 +18,13 @@ import { getSelectedPizza } from '../../store/selectors';
       class="product-item">
       <pizza-form
         [pizza]="pizza$ | async"
-        [toppings]="toppings"
+        [toppings]="toppings$ | async"
         (selected)="onSelect($event)"
         (create)="onCreate($event)"
         (update)="onUpdate($event)"
         (remove)="onRemove($event)">
         <pizza-display
-          [pizza]="visualise">
+          [pizza]="visualise$ | async">
         </pizza-display>
       </pizza-form>
     </div>
@@ -30,8 +32,8 @@ import { getSelectedPizza } from '../../store/selectors';
 })
 export class ProductItemComponent implements OnInit {
   pizza$: Observable<Pizza>;
-  visualise: Pizza;
-  toppings: Topping[];
+  visualise$: Observable<Pizza>;
+  toppings$: Observable<Topping[]>;
 
   constructor(
     private store: Store<ProductsState>,
@@ -40,9 +42,12 @@ export class ProductItemComponent implements OnInit {
 
   ngOnInit() {
     this.pizza$ = this.store.select(getSelectedPizza);
+    this.toppings$ = this.store.select(getAllToppings);
+    this.visualise$ = this.store.select(getPizzaVisualised);
   }
 
   onSelect(event: number[]) {
+    this.store.dispatch(new VisualizeToppings(event));
   }
 
   onCreate(event: Pizza) {
