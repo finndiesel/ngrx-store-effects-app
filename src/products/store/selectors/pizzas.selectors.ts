@@ -1,12 +1,12 @@
 import { createSelector } from '@ngrx/store';
 
 import {
-  getPizzasEntities, getPizzasLoaded, getPizzasLoading, getProductsState, getToppingsEntities,
+  getPizzasEntities, getPizzasLoaded, getPizzasLoading, getProductsState,
   ProductsState
 } from '../reducers';
 import { getRouterState } from '../../../app/store/reducers';
 import { Pizza } from '../../models/pizza.model';
-import { getSelectedToppings } from './toppings.selectors';
+import { getSelectedToppings, getToppingsEntities } from './toppings.selectors';
 
 export const getPizzaState = createSelector(
   getProductsState,

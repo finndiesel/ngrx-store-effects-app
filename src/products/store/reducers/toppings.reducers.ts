@@ -42,7 +42,6 @@ export function toppingsReducer(
       const payload = action.payload;
       const entities = payload.reduce(
         (toppings: { [id: number]: Topping }, topping: Topping) => {
-          console.log(topping);
           return {
             ...toppings,
             [topping.id]: topping,
@@ -69,6 +68,7 @@ export function toppingsReducer(
       };
     }
   }
+  return state;
 }
 
 export const getToppingsEntities = (state: ToppingsState) => state.entities;
